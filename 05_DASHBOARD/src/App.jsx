@@ -3,7 +3,9 @@ import { Routes, Route } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout";
 
 import Home from "./pages/admin/Home";
-import UserManagement from "./pages/admin/UserManagement";
+import UserManagement from "./pages/admin/user-management/UserManagement";
+import TraineeManagement from "./pages/admin/user-management/TraineeManagement";
+import AssessorManagement from "./pages/admin/user-management/AssessorManagement";
 import AssessmentManagement from "./pages/admin/AssessmentManagement";
 import ResultsMonitoring from "./pages/admin/ResultsMonitoring";
 import CertificateManagement from "./pages/admin/CertificateManagement";
@@ -16,7 +18,19 @@ function App() {
     <AdminLayout>
       <Routes>
         <Route path="/" element={<Home />} />
+
         <Route path="/users" element={<UserManagement />} />
+
+        <Route
+          path="/user-management/trainees"
+          element={<TraineeManagement />}
+        />
+
+        <Route
+          path="/user-management/assessors"
+          element={<AssessorManagement />}
+        />
+
         <Route path="/assessments" element={<AssessmentManagement />} />
         <Route path="/results" element={<ResultsMonitoring />} />
         <Route path="/certificates" element={<CertificateManagement />} />

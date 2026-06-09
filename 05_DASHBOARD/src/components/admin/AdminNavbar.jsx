@@ -6,6 +6,8 @@ function AdminNavbar() {
   const pageTitles = {
     "/": "Home",
     "/users": "User Management",
+    "/user-management/trainees": "Trainee Management",
+    "/user-management/assessors": "Assessor Management",
     "/assessments": "Assessment Management",
     "/results": "Results Monitoring",
     "/certificates": "Certificate Management",
@@ -29,10 +31,10 @@ function AdminNavbar() {
         px-6
       "
     >
-      <h1 className="text-2xl font-semibold text-gray-400">
-        {currentTitle}
+      <h1 className="text-xl font-semibold text-gray-400">
+        {pageTitles[location.pathname] || "Admin Dashboard"}
       </h1>
-
+      
       <div className="flex items-center gap-3">
         <img
           src="/admin.jpg"

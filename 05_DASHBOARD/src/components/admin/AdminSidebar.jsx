@@ -1,4 +1,5 @@
-import { NavLink } from "react-router-dom";
+
+import { NavLink, useLocation } from "react-router-dom";
 
 import {
     Home,
@@ -14,6 +15,8 @@ import {
 } from "lucide-react";
 
 function AdminSidebar({ isOpen, setIsOpen }) {
+    const location = useLocation();
+
     const menuItems = [
         { icon: Home, label: "Home", path: "/" },
         { icon: Users, label: "User Management", path: "/users" },
@@ -81,12 +84,20 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                         <li key={index}>
                             <NavLink
                                 to={item.path}
-                                className={({ isActive }) =>
-                                    `w-full flex items-center gap-4 px-4 py-3 rounded-xl transition ${isActive
+                                end={item.path === "/"}
+                                className={({ isActive }) => {
+                                    const userManagementActive =
+                                        item.path === "/users" &&
+                                        (
+                                            location.pathname === "/users" ||
+                                            location.pathname.startsWith("/user-management")
+                                        );
+
+                                    return `w-full flex items-center gap-4 px-4 py-3 rounded-xl transition ${isActive || userManagementActive
                                         ? "bg-blue-800"
                                         : "hover:bg-blue-700"
-                                    }`
-                                }
+                                    }`;
+                                }}
                             >
                                 <item.icon size={22} />
 
