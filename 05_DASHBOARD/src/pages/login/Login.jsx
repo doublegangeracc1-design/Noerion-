@@ -1,0 +1,213 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Mail, Lock } from "lucide-react";
+import AnimatedWave from "./AnimatedWave";
+
+export default function Login() {
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // ==========================================
+        // TEMPORARY TEST MODE
+        // Skip all login validation and API calls
+        // Directly proceed to Loading Page
+        // ==========================================
+
+        navigate("/loading");
+
+        /*
+        setError("");
+
+        if (!email) {
+            setError("Email is required");
+            return;
+        }
+
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters");
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const response = await fetch(
+                "http://localhost:3000/api/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password,
+                    }),
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message || "Login failed"
+                );
+            }
+
+            console.log("LOGIN SUCCESS:", data);
+
+            localStorage.setItem(
+                "token",
+                data.token
+            );
+
+            navigate("/loading");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+        */
+    };
+
+    return (
+        <div className="min-h-screen bg-[#040814] flex justify-center items-center overflow-hidden relative">
+
+            {/* Background */}
+            <AnimatedWave />
+
+            {/* Ambient Glow */}
+            <div className="absolute -top-40 -left-32 w-[500px] h-[500px] bg-cyan-400/20 blur-[180px]" />
+
+            <div className="absolute -bottom-40 -right-32 w-[500px] h-[500px] bg-purple-500/20 blur-[180px]" />
+
+            {/* Login Card */}
+            <div className="relative z-10 w-[420px] p-8 rounded-[28px] bg-slate-950/75 backdrop-blur-[30px] border border-cyan-400/40 shadow-[0_0_20px_rgba(0,242,255,.35),0_0_60px_rgba(0,242,255,.25),0_0_120px_rgba(0,242,255,.35)]">
+
+                <h1 className="text-center text-cyan-400 text-4xl font-light mb-3">
+                    NOERION
+                </h1>
+
+                <h3 className="text-center text-white font-bold text-lg">
+                    Welcome Back to NOERION
+                </h3>
+
+                <p className="text-center text-slate-400 text-sm mb-6">
+                    Access your cognitive evaluation system.
+                </p>
+
+                <form
+                    onSubmit={handleSubmit}
+                    className="space-y-3"
+                >
+                    {/* Email */}
+                    <div className="flex items-center h-12 px-4 rounded-2xl bg-slate-900/50 border border-cyan-400/40">
+
+                        <Mail
+                            size={18}
+                            className="text-cyan-300 mr-3"
+                        />
+
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) =>
+                                setEmail(e.target.value)
+                            }
+                            className="flex-1 bg-transparent outline-none text-white"
+                        />
+                    </div>
+
+                    {/* Password */}
+                    <div className="flex items-center h-12 px-4 rounded-2xl bg-slate-900/50 border border-cyan-400/40">
+
+                        <Lock
+                            size={18}
+                            className="text-cyan-300 mr-3"
+                        />
+
+                        <input
+                            type={
+                                showPassword
+                                    ? "text"
+                                    : "password"
+                            }
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) =>
+                                setPassword(
+                                    e.target.value
+                                )
+                            }
+                            className="flex-1 bg-transparent outline-none text-white"
+                        />
+
+                        <button
+                            type="button"
+                            onClick={() =>
+                                setShowPassword(
+                                    !showPassword
+                                )
+                            }
+                        >
+                            {showPassword ? (
+                                <EyeOff
+                                    size={18}
+                                    className="text-cyan-300"
+                                />
+                            ) : (
+                                <Eye
+                                    size={18}
+                                    className="text-cyan-300"
+                                />
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Error Message */}
+                    {error && (
+                        <p className="text-red-400 text-sm text-center">
+                            {error}
+                        </p>
+                    )}
+
+                    {/* Login Button */}
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full h-12 rounded-2xl text-white font-bold bg-gradient-to-r from-cyan-400 via-teal-300 to-purple-500"
+                    >
+                        {loading
+                            ? "Logging in..."
+                            : "Login"}
+                    </button>
+
+                    {/* Request Access */}
+                    <button
+                        type="button"
+                        className="w-full h-12 rounded-2xl border border-cyan-400/40 text-cyan-300 bg-slate-900/30"
+                    >
+                        Request Access
+                    </button>
+                </form>
+
+                <div className="text-center mt-5">
+                    <a
+                        href="#"
+                        className="text-purple-400 text-sm"
+                    >
+                        Forgot Password?
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+}

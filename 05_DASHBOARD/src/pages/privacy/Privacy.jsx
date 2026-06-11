@@ -1,0 +1,210 @@
+import { useState } from "react";
+import tesdaLogo from "../../assets/tesda1.png";
+import brainIcon from "../../assets/brain.svg";
+
+export default function Privacy() {
+    const [consent, setConsent] = useState(false);
+
+    const handleAccept = () => {
+        if (!consent) return;
+
+        const role = localStorage.getItem("role");
+
+        if (role === "admin") window.location.href = "/admin";
+        else if (role === "assessor") window.location.href = "/assessor";
+        else window.location.href = "/trainee";
+    };
+
+    const handleDecline = () => {
+        window.location.href = "/";
+    };
+
+    return (
+        <div className="min-h-screen bg-[#f2f2f2]">
+
+            {/* HEADER (MATCH HTML DESIGN) */}
+            <div className="w-full bg-white border-b shadow-md">
+                <div className="max-w-[1100px] mx-auto flex items-center justify-center gap-4 px-4 py-2">
+
+                    <div className="flex items-center gap-3">
+                        <img src={tesdaLogo} className="w-[45px]" alt="TESDA Logo" />
+
+                        <div className="flex flex-col leading-tight">
+                            <h1 className="text-[20px] font-bold text-[#333]">
+                                TESDA
+                            </h1>
+
+                            <p className="text-[13px] text-gray-600">
+                                Assessment System
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="w-[2px] h-[45px] bg-gray-300" />
+
+                    <h3 className="max-w-[450px] text-[15px] text-[#222] leading-snug text-center">
+                        <span className="font-bold">NOERION:</span>{" "}
+                        An AI-Driven Skill Evaluation System with EEG Integration
+                    </h3>
+                </div>
+            </div>
+
+            {/* CONTAINER */}
+            <div className="max-w-[820px] mx-auto mt-3 shadow-2xl">
+
+                {/* MAIN CARD */}
+                <div className="bg-[#f7f7f7] border border-[#d7d7d7] rounded-[14px] p-3 shadow-lg">
+
+                    <h1 className="text-[18px] font-bold mb-2 text-[#111]">
+                        Data Privacy and User Consent
+                    </h1>
+
+                    <p className="text-[14px] text-gray-900 mb-4 leading-relaxed">
+                        This system collects and processes personal and physiological data,
+                        including EEG signals, to support skill evaluation.
+                        Your privacy and data security are our priority.
+                    </p>
+
+                    {/* NOTICE BOX */}
+                    <div className="bg-white border rounded-xl p-3 shadow-xl">
+
+                        <h2 className="text-[15px] font-bold mb-2 text-[#111]">
+                            Data Privacy Notice
+                        </h2>
+
+                        <div className="grid grid-cols-2 gap-10">
+
+                            <div>
+                                <h3 className="font-semibold text-[14px] mb-2 text-gray-900">
+                                    Types of Data Collected
+                                </h3>
+                                <ul className="list-disc pl-5 text-[14px] text-gray-900">
+                                    <li>Personal Information (Name, Email)</li>
+                                    <li>Assessment Results</li>
+                                    <li>EEG Brainwave Data</li>
+                                </ul>
+                            </div>
+
+                            <div>
+                                <h3 className="font-semibold text-[14px] mb-2 text-gray-900">
+                                    Purpose of Data Collection
+                                </h3>
+                                <ul className="list-disc pl-5 text-[14px] text-gray-900">
+                                    <li>Skill Evaluation</li>
+                                    <li>Cognitive Engagement Analysis</li>
+                                    <li>Certification</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* SENSITIVE BOX (MATCH BLUE STYLE) */}
+                        <div className="flex items-center gap-4 bg-[#dff2ff] border border-[#78bdf5] rounded-lg p-4 mt-4">
+
+                            <img src={brainIcon} className="w-10 h-10" />
+
+                            <p className="text-[13px] text-gray-700">
+                                <strong>⚠ SENSITIVE DATA NOTICE:</strong> EEG data is
+                                considered sensitive personal information. It reflects brain activity
+                                and will be handled with strict confidentiality and security measures.
+                            </p>
+                        </div>
+
+                        {/* RIGHTS */}
+                        <div className="mt-4">
+
+                            <h3 className="font-semibold mb-3 text-[14px] text-gray-900">
+                                User Rights Section
+                            </h3>
+
+                            <div className="grid grid-cols-2 gap-6 text-[14px] text-gray-900">
+
+                                <ul className="list-disc pl-5">
+                                    <li>Right to be Informed</li>
+                                    <li>Right to Access Your Data</li>
+                                </ul>
+
+                                <ul className="list-disc pl-5">
+                                    <li>Right to Withdraw Consent</li>
+                                    <li>Right to Data Protection</li>
+                                </ul>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {/* CONSENT SCROLL BOX */}
+                    <div className="mt-4">
+
+                        <div className="h-[90px] overflow-y-auto bg-white border border-gray-400 shadow-xl rounded-lg p-3 text-[13px] leading-relaxed">
+
+                            <p className="font-bold mb-2 text-gray-900">CONSENT AGREEMENT</p>
+
+                            <p className="mb-2 text-gray-900">
+                                By proceeding with this assessment, you voluntarily consent
+                                to the collection, processing, storage, and analysis of
+                                your personal information and EEG brainwave data solely
+                                for skill evaluation, cognitive engagement analysis,
+                                certification, and related educational purposes.
+
+                            </p>
+
+                            <p className="mb-2 text-gray-900">
+                                Your information will be handled securely and confidentially
+                                in accordance with applicable data privacy regulations.
+                                You may withdraw your consent at any time, subject to the
+                                limitations of assessment processing requirements.
+                            </p>
+
+                            <p className="mb-2 text-gray-900">
+                                By checking the box below, you confirm that you have read,
+                                understood, and agreed to this Privacy Notice and Consent
+                                Agreement.
+                            </p>
+
+                        </div>
+                    </div>
+
+                    {/* CHECKBOX */}
+                    <div className="flex items-start gap-3 mt-4">
+
+                        <input
+                            type="checkbox"
+                            className="w-5 h-5 mt-1 accent-blue-700"
+                            checked={consent}
+                            onChange={(e) => setConsent(e.target.checked)}
+                        />
+
+                        <label className="text-[14px] text-gray-900">
+                            I have read and understood the data privacy notice and consent
+                            to the collection and processing of my data, including EEG data.
+                        </label>
+
+                    </div>
+
+                    {/* BUTTONS */}
+                    <div className="flex justify-end gap-3 -mt-2">
+
+                        <button
+                            onClick={handleAccept}
+                            disabled={!consent}
+                            className={`px-4 py-2 rounded text-white text-sm ${consent ? "bg-blue-700 hover:bg-blue-800" : "bg-gray-400"
+                                }`}
+                        >
+                            Accept and Continue
+                        </button>
+
+                        <button
+                            onClick={handleDecline}
+                            className="px-4 py-2 bg-gray-600 text-white text-sm rounded hover:bg-gray-700"
+                        >
+                            Decline
+                        </button>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+}
