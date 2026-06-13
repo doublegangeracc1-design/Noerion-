@@ -1,4 +1,3 @@
-
 import { NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -18,27 +17,27 @@ function AdminSidebar({ isOpen, setIsOpen }) {
     const location = useLocation();
 
     const menuItems = [
-        { icon: Home, label: "Home", path: "/" },
-        { icon: Users, label: "User Management", path: "/users" },
-        { icon: ClipboardList, label: "Assessment Management", path: "/assessments" },
-        { icon: BarChart3, label: "Results Monitoring", path: "/results" },
-        { icon: Award, label: "Certificate Management", path: "/certificates" },
-        { icon: User, label: "Profile", path: "/profile" },
-        { icon: Settings, label: "Settings", path: "/settings" },
-        { icon: LogOut, label: "Logout", path: "/logout" },
+        { icon: Home, label: "Home", path: "/admin" },
+        { icon: Users, label: "User Management", path: "/admin/user-management" },
+        { icon: ClipboardList, label: "Assessment Management", path: "/admin/assessments" },
+        { icon: BarChart3, label: "Results Monitoring", path: "/admin/results" },
+        { icon: Award, label: "Certificate Management", path: "/admin/certificates" },
+        { icon: User, label: "Profile", path: "/admin/profile" },
+        { icon: Settings, label: "Settings", path: "/admin/settings" },
+        { icon: LogOut, label: "Logout", path: "/admin/logout" },
     ];
 
     return (
         <aside
             className={`
-        bg-[#001F5B]
-        text-white
-        h-screen
-        transition-all duration-300
-        flex
-        flex-col
-        ${isOpen ? "w-72" : "w-20"}
-      `}
+                bg-[#001F5B]
+                text-white
+                h-screen
+                transition-all duration-300
+                flex
+                flex-col
+                ${isOpen ? "w-72" : "w-20"}
+            `}
         >
             {/* Header */}
             <div className="p-4 flex items-center justify-center">
@@ -84,18 +83,16 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                         <li key={index}>
                             <NavLink
                                 to={item.path}
-                                end={item.path === "/"}
+                                end={item.path === "/admin"}
                                 className={({ isActive }) => {
                                     const userManagementActive =
-                                        item.path === "/users" &&
-                                        (
-                                            location.pathname === "/users" ||
-                                            location.pathname.startsWith("/user-management")
-                                        );
+                                        item.path === "/admin/user-management" &&
+                                        location.pathname.startsWith("/admin/user-management");
 
-                                    return `w-full flex items-center gap-4 px-4 py-3 rounded-xl transition ${isActive || userManagementActive
-                                        ? "bg-blue-800"
-                                        : "hover:bg-blue-700"
+                                    return `w-full flex items-center gap-4 px-4 py-3 rounded-xl transition ${
+                                        isActive || userManagementActive
+                                            ? "bg-blue-800"
+                                            : "hover:bg-blue-700"
                                     }`;
                                 }}
                             >

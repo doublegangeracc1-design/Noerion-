@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import SearchBar from "../../../components/admin/shared/SearchBar";
 import AssessorTable from "../../../components/admin/assessor-management/AssessorTable";
@@ -11,11 +12,31 @@ import AssessorVerificationFilter from "../../../components/admin/assessor-manag
 |--------------------------------------------------------------------------
 | Frontend Development Only
 |
+| This data is used to test:
+| - assessor table display
+| - search filtering
+| - status filtering
+| - verification filtering
+| - table pagination
+| - edit/deactivate/reactivate actions
+|
 | TODO (Backend):
 | Replace with API response.
+|
+| Expected backend response format:
+| {
+|   id: 1,
+|   fullName: "Emily Chen",
+|   assessorId: "ASR-2023-001",
+|   email: "emily.chen@example.com",
+|   status: "Active",
+|   verificationStatus: "Verified"
+| }
+|
+| Example:
+| GET /api/assessors
 |--------------------------------------------------------------------------
 */
-
 const initialAssessors = [
   {
     id: 1,
@@ -41,42 +62,59 @@ const initialAssessors = [
     status: "Inactive",
     verificationStatus: "Verified",
   },
+  {
+    id: 4,
+    fullName: "Daniel Park",
+    assessorId: "ASR-2023-004",
+    email: "daniel.park@example.com",
+    status: "Inactive",
+    verificationStatus: "Verified",
+  },
+  {
+    id: 5,
+    fullName: "Nina Santos",
+    assessorId: "ASR-2023-005",
+    email: "nina.santos@example.com",
+    status: "Active",
+    verificationStatus: "Verified",
+  },
+  {
+    id: 6,
+    fullName: "Leo Reyes",
+    assessorId: "ASR-2023-006",
+    email: "leo.reyes@example.com",
+    status: "Inactive",
+    verificationStatus: "Not Verified",
+  },
 ];
 
 function AssessorManagement() {
+  const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [verificationFilter, setVerificationFilter] =
-    useState("All");
+  const [verificationFilter, setVerificationFilter] = useState("All");
 
   /*
   |--------------------------------------------------------------------------
   | ASSESSOR DATA
   |--------------------------------------------------------------------------
+  | Currently uses mock data.
   |
   | TODO (Backend):
-  | Replace mock data with API response.
+  | Replace initialAssessors with API response.
   |
   | Example:
-  | GET /api/assessors
+  | const [assessors, setAssessors] = useState([]);
+  |
+  | useEffect(() => {
+  |   fetch("/api/assessors")
+  |     .then((res) => res.json())
+  |     .then((data) => setAssessors(data));
+  | }, []);
   |--------------------------------------------------------------------------
   */
-
-  const [assessors, setAssessors] =
-    useState(initialAssessors);
-
-  /*
-  |--------------------------------------------------------------------------
-  | DEACTIVATE ASSESSOR
-  |--------------------------------------------------------------------------
-  |
-  | Frontend:
-  | Changes verification status only.
-  |
-  | Backend:
-  | PATCH /api/assessors/:id
-  |--------------------------------------------------------------------------
-  */
+  const [assessors, setAssessors] = useState(initialAssessors);
 
   const handleDeactivate = (id) => {
     setAssessors((prev) =>
@@ -84,26 +122,13 @@ function AssessorManagement() {
         assessor.id === id
           ? {
               ...assessor,
-              verificationStatus:
-                "Not Verified",
+              status: "Inactive",
+              verificationStatus: "Not Verified",
             }
           : assessor
       )
     );
   };
-
-  /*
-  |--------------------------------------------------------------------------
-  | REACTIVATE ASSESSOR
-  |--------------------------------------------------------------------------
-  |
-  | Frontend:
-  | Changes verification status only.
-  |
-  | Backend:
-  | PATCH /api/assessors/:id
-  |--------------------------------------------------------------------------
-  */
 
   const handleReactivate = (id) => {
     setAssessors((prev) =>
@@ -111,123 +136,79 @@ function AssessorManagement() {
         assessor.id === id
           ? {
               ...assessor,
-              verificationStatus:
-                "Verified",
+              status: "Active",
+              verificationStatus: "Verified",
             }
           : assessor
       )
     );
   };
 
-  /*
-  |--------------------------------------------------------------------------
-  | DELETE ASSESSOR
-  |--------------------------------------------------------------------------
-  |
-  | Backend:
-  | DELETE /api/assessors/:id
-  |--------------------------------------------------------------------------
-  */
-
   const handleDelete = (id) => {
-    setAssessors((prev) =>
-      prev.filter(
-        (assessor) => assessor.id !== id
-      )
-    );
+    setAssessors((prev) => prev.filter((assessor) => assessor.id !== id));
   };
 
-  /*
-  |--------------------------------------------------------------------------
-  | UPDATE ASSESSOR
-  |--------------------------------------------------------------------------
-  |
-  | Used by Edit Modal.
-  |
-  | Backend:
-  | PUT /api/assessors/:id
-  |--------------------------------------------------------------------------
-  */
-
-  const handleUpdateAssessor = (
-    updatedAssessor
-  ) => {
+  const handleUpdateAssessor = (updatedAssessor) => {
     setAssessors((prev) =>
       prev.map((assessor) =>
-        assessor.id === updatedAssessor.id
-          ? updatedAssessor
-          : assessor
+        assessor.id === updatedAssessor.id ? updatedAssessor : assessor
       )
     );
   };
 
   /*
   |--------------------------------------------------------------------------
-  | FILTERING
+  | FRONTEND FILTERING
+  |--------------------------------------------------------------------------
+  | Current: Filtering is done on the frontend.
+  |
+  | TODO (Backend - Optional):
+  | If assessor data becomes large, filtering can be moved to API queries.
   |--------------------------------------------------------------------------
   */
+  const filteredAssessors = assessors.filter((assessor) => {
+    const searchValue = search.toLowerCase();
 
-  const filteredAssessors =
-    assessors.filter((assessor) => {
-      const matchesSearch =
-        assessor.fullName
-          .toLowerCase()
-          .includes(search.toLowerCase()) ||
-        assessor.email
-          .toLowerCase()
-          .includes(search.toLowerCase()) ||
-        assessor.assessorId
-          .toLowerCase()
-          .includes(search.toLowerCase());
+    const matchesSearch =
+      assessor.fullName.toLowerCase().includes(searchValue) ||
+      assessor.email.toLowerCase().includes(searchValue) ||
+      assessor.assessorId.toLowerCase().includes(searchValue);
 
-      const matchesStatus =
-        statusFilter === "All" ||
-        assessor.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "All" || assessor.status === statusFilter;
 
-      const matchesVerification =
-        verificationFilter === "All" ||
-        assessor.verificationStatus ===
-          verificationFilter;
+    const matchesVerification =
+      verificationFilter === "All" ||
+      assessor.verificationStatus === verificationFilter;
 
-      return (
-        matchesSearch &&
-        matchesStatus &&
-        matchesVerification
-      );
-    });
+    return matchesSearch && matchesStatus && matchesVerification;
+  });
 
   return (
-    <div className="p-6">
-
-      {/* PAGE HEADER */}
-      <div className="flex justify-between items-center mb-6">
-
+    <div className="p-0">
+      {/* Page Header */}
+      <div className="mb-5 flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold">
-            Assessors
-          </h1>
+          <h1 className="text-4xl font-bold text-gray-900">Assessors</h1>
 
           <p className="text-gray-600">
-            Manage assessor accounts and
-            access
+            Manage assessor accounts and access
           </p>
         </div>
 
-        <button className="bg-blue-900 text-white px-5 py-3 rounded-xl hover:bg-blue-800">
+        <button
+          type="button"
+          onClick={() => navigate("/admin/user-management/add-assessor")}
+          className="whitespace-nowrap rounded-xl bg-blue-700 px-6 py-3 font-medium text-white hover:bg-blue-800"
+        >
           + Add Assessor
         </button>
-
       </div>
 
-      {/* SEARCH + FILTERS */}
-      <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.35)] p-6 mb-6">
-
-        <div className="flex flex-col lg:flex-row gap-4">
-
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-          />
+      {/* Search and Filter Controls */}
+      <div className="mb-6 rounded-2xl bg-white p-3 shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <SearchBar search={search} setSearch={setSearch} />
 
           <AssessorStatusFilter
             value={statusFilter}
@@ -236,41 +217,21 @@ function AssessorManagement() {
 
           <AssessorVerificationFilter
             value={verificationFilter}
-            onChange={
-              setVerificationFilter
-            }
+            onChange={setVerificationFilter}
           />
-
         </div>
-
       </div>
 
-      {/* TABLE */}
-      <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.35)] p-6">
-
+      {/* Assessor Data Table */}
+      <div className="rounded-2xl bg-white p-5 shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
         <AssessorTable
           assessors={filteredAssessors}
-          onDeactivate={
-            handleDeactivate
-          }
-          onReactivate={
-            handleReactivate
-          }
+          onDeactivate={handleDeactivate}
+          onReactivate={handleReactivate}
           onDelete={handleDelete}
-          onUpdate={
-            handleUpdateAssessor
-          }
+          onUpdate={handleUpdateAssessor}
         />
-
-        <div className="border-t mt-4 pt-4 text-sm text-gray-600">
-          ⚠️ IMPORTANT: Deleting an
-          assessor removes access but
-          retains historical assessment
-          records.
-        </div>
-
       </div>
-
     </div>
   );
 }

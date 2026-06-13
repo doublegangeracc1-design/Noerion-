@@ -6,8 +6,6 @@ function UserManagement() {
     <div className="min-h-screen px-6 py-10">
       {/* Header */}
       <div className="text-center mb-12">
-        
-
         <h1 className="text-4xl font-bold text-gray-900 mt-2">
           User Management
         </h1>
@@ -15,10 +13,9 @@ function UserManagement() {
 
       {/* Cards Container */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-10">
-        
         {/* Trainees Card */}
         <Link
-          to="/user-management/trainees"
+          to="/admin/user-management/trainees"
           className="w-full max-w-md"
         >
           <div className="
@@ -51,7 +48,7 @@ function UserManagement() {
 
         {/* Assessors Card */}
         <Link
-          to="/user-management/assessors"
+          to="/admin/user-management/assessors"
           className="w-full max-w-md"
         >
           <div className="
@@ -81,7 +78,6 @@ function UserManagement() {
             </p>
           </div>
         </Link>
-
       </div>
     </div>
   );

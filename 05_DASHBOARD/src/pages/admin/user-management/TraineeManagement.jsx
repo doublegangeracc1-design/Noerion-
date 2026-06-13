@@ -6,14 +6,33 @@ import StatusFilter from "../../../components/admin/trainee-management/StatusFil
 import VerificationFilter from "../../../components/admin/trainee-management/VerificationFilter";
 
 import TraineeTable from "../../../components/admin/trainee-management/TraineeTable";
+
 /*
 |--------------------------------------------------------------------------
 | TEMPORARY MOCK DATA
 |--------------------------------------------------------------------------
 | Frontend Development Only
 |
+| This data is used to test:
+| - trainee table display
+| - search filtering
+| - status filtering
+| - verification filtering
+| - approve/reject frontend actions
+| - pagination in TraineeTable
+|
 | TODO (Backend):
 | Replace this mock data with data from the Trainees API.
+|
+| Expected backend response format:
+| {
+|   id: 1,
+|   fullName: "John Doe",
+|   traineeId: "TRN-2023-001",
+|   email: "john.doe@example.com",
+|   status: "Pending",
+|   verificationStatus: "Not Verified"
+| }
 |
 | Example:
 | GET /api/trainees
@@ -68,7 +87,6 @@ const initialTrainees = [
     status: "Rejected",
     verificationStatus: "N/A",
   },
-
 ];
 
 function TraineeManagement() {
@@ -90,8 +108,8 @@ function TraineeManagement() {
   |
   | useEffect(() => {
   |   fetch("/api/trainees")
-  |     .then(res => res.json())
-  |     .then(data => setTrainees(data));
+  |     .then((res) => res.json())
+  |     .then((data) => setTrainees(data));
   | }, []);
   |--------------------------------------------------------------------------
   */
@@ -115,10 +133,10 @@ function TraineeManagement() {
       prev.map((trainee) =>
         trainee.id === id
           ? {
-            ...trainee,
-            status: "Approved",
-            verificationStatus: "Verified",
-          }
+              ...trainee,
+              status: "Approved",
+              verificationStatus: "Verified",
+            }
           : trainee
       )
     );
@@ -142,14 +160,15 @@ function TraineeManagement() {
       prev.map((trainee) =>
         trainee.id === id
           ? {
-            ...trainee,
-            status: "Rejected",
-            verificationStatus: "N/A",
-          }
+              ...trainee,
+              status: "Rejected",
+              verificationStatus: "N/A",
+            }
           : trainee
       )
     );
   };
+
   /*
   |--------------------------------------------------------------------------
   | DELETE TRAINEE
@@ -164,10 +183,9 @@ function TraineeManagement() {
   |--------------------------------------------------------------------------
   */
   const handleDelete = (id) => {
-    setTrainees((prev) =>
-      prev.filter((trainee) => trainee.id !== id)
-    );
+    setTrainees((prev) => prev.filter((trainee) => trainee.id !== id));
   };
+
   /*
   |--------------------------------------------------------------------------
   | FRONTEND FILTERING
@@ -176,13 +194,20 @@ function TraineeManagement() {
   |
   | TODO (Backend - Optional):
   | If dataset becomes large, filtering can be moved to API queries.
+  |
+  | Supported search fields:
+  | - fullName
+  | - email
+  | - traineeId
   |--------------------------------------------------------------------------
   */
   const filteredTrainees = trainees.filter((trainee) => {
+    const searchValue = search.toLowerCase();
+
     const matchesSearch =
-      trainee.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      trainee.email.toLowerCase().includes(search.toLowerCase()) ||
-      trainee.traineeId.toLowerCase().includes(search.toLowerCase());
+      trainee.fullName.toLowerCase().includes(searchValue) ||
+      trainee.email.toLowerCase().includes(searchValue) ||
+      trainee.traineeId.toLowerCase().includes(searchValue);
 
     const matchesStatus =
       statusFilter === "All" || trainee.status === statusFilter;
@@ -195,12 +220,10 @@ function TraineeManagement() {
   });
 
   return (
-    <div className="p-6">
+    <div className="p-0">
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-4xl font-bold text-gray-900">
-          Trainees
-        </h1>
+        <h1 className="text-4xl font-bold text-gray-900">Trainees</h1>
 
         <p className="text-gray-600">
           Manage and review trainee accounts
@@ -208,17 +231,11 @@ function TraineeManagement() {
       </div>
 
       {/* Search and Filter Controls */}
-      <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.35)] p-6 mb-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <SearchBar
-            search={search}
-            setSearch={setSearch}
-          />
+      <div className="mb-5 rounded-2xl bg-white p-3 shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
+        <div className="flex flex-col gap-4 lg:flex-row">
+          <SearchBar search={search} setSearch={setSearch} />
 
-          <StatusFilter
-            value={statusFilter}
-            onChange={setStatusFilter}
-          />
+          <StatusFilter value={statusFilter} onChange={setStatusFilter} />
 
           <VerificationFilter
             value={verificationFilter}
@@ -228,7 +245,7 @@ function TraineeManagement() {
       </div>
 
       {/* Trainee Data Table */}
-      <div className="bg-white rounded-2xl shadow-[0_4px_12px_rgba(0,0,0,0.35)] p-6">
+      <div className="rounded-2xl bg-white p-5 shadow-[0_4px_12px_rgba(0,0,0,0.35)]">
         <TraineeTable
           trainees={filteredTrainees}
           onApprove={handleApprove}
